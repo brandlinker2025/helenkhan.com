@@ -437,7 +437,7 @@ setInterval(()=>{fr++;const f=fr%24,s=Math.floor(fr/24)%60,m=Math.floor(fr/1440)
 /* hero video: respect reduced-motion, keep playing when the tab returns */
 const hv=document.getElementById("hero-video");
 if(matchMedia("(prefers-reduced-motion: reduce)").matches){hv.removeAttribute("autoplay");hv.pause();}
-else{const p=hv.play();if(p&&p.catch)p.catch(()=>{});}
+else{const go=()=>{const p=hv.play();if(p&&p.catch)p.catch(()=>{});};go();document.addEventListener("visibilitychange",()=>{if(!document.hidden)go();});}
 
 /* copy */
 document.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
