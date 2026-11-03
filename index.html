@@ -178,6 +178,14 @@ textarea{min-height:110px;resize:vertical}
 footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
 /* lightbox */
+.wa-float{position:fixed;z-index:15;right:max(18px,calc(env(safe-area-inset-right,0px) + 14px));bottom:max(18px,calc(env(safe-area-inset-bottom,0px) + 14px));display:flex;align-items:center;gap:0;height:56px;padding:0 15px;border-radius:99px;background:#25d366;color:#fff;text-decoration:none;box-shadow:0 8px 24px #0007,0 0 0 1px #ffffff1f inset;font:700 .9rem var(--body);transition:gap .25s ease,padding .25s ease,transform .2s ease}
+.wa-float svg{width:26px;height:26px;flex:none}
+.wa-float span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .3s ease}
+.wa-float:hover,.wa-float:focus-visible{gap:10px;padding:0 20px 0 16px;transform:translateY(-2px)}
+.wa-float:hover span,.wa-float:focus-visible span{max-width:120px}
+.wa-float::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 #25d36680;animation:wapulse 2.6s ease-out 2s 3}
+@keyframes wapulse{to{box-shadow:0 0 0 16px #25d36600}}
+.out .btn{background:#25d366;color:#fff}
 .lb{position:fixed;inset:0;z-index:20;background:#000e;display:grid;place-items:center;padding:24px}
 .lb .box{width:min(960px,100%)}
 .lb .img{aspect-ratio:16/9;max-width:100%;border:1px solid var(--line);position:relative}
@@ -346,7 +354,7 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
         <label>Shoot type<select id="f-type"><option>Premium package (৳25,000)</option><option>Regular package (৳20,000)</option><option>Light package (৳15,000)</option><option>Wedding</option><option>Birthday / Event</option><option>Biker ride</option><option>Restaurant content</option></select></label>
         <label>Date<input id="f-date" type="date"></label>
         <label class="full">Tell me about it<textarea id="f-msg" placeholder="Venue, guest count, style you like…"></textarea></label>
-        <button class="btn full" type="submit">Prepare booking message</button>
+        <button class="btn full" type="submit">Send booking on WhatsApp</button>
         <div class="out" id="out" hidden></div>
       </form>
     </div>
@@ -354,6 +362,11 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
 
   <footer><span class="mono">© 2026 Helena Khan</span><span class="mono">Cinematographer · framemotionbyhelen@gmail.com · +880 1309-002664</span></footer>
 </main>
+
+<a class="wa-float" id="wa-float" href="https://wa.me/8801309002664" target="_blank" rel="noopener" aria-label="Chat with Helena on WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.04 3C9.4 3 4 8.36 4 14.97c0 2.11.56 4.17 1.62 5.99L4 29l8.28-2.16a12.1 12.1 0 0 0 3.76.6h.01c6.64 0 12.04-5.37 12.04-11.98C28.09 8.36 22.68 3 16.04 3Zm0 21.9h-.01c-1.18 0-2.34-.2-3.43-.6l-.25-.09-4.92 1.28 1.31-4.77-.16-.25a9.86 9.86 0 0 1-1.54-5.5c0-5.48 4.48-9.94 10-9.94 5.51 0 9.99 4.46 9.99 9.94 0 5.48-4.48 9.93-9.99 9.93Zm5.48-7.43c-.3-.15-1.78-.87-2.05-.97-.28-.1-.48-.15-.68.15s-.78.97-.96 1.17c-.18.2-.35.22-.65.07-.3-.15-1.27-.46-2.42-1.48-.9-.79-1.5-1.77-1.68-2.07-.18-.3-.02-.46.13-.6.14-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.68-1.63-.93-2.23-.24-.58-.49-.5-.68-.51h-.58c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.47 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.48.71.3 1.27.49 1.7.62.71.23 1.36.2 1.88.12.57-.09 1.78-.72 2.03-1.42.25-.7.25-1.3.18-1.42-.08-.13-.28-.2-.58-.35Z"/></svg>
+  <span>WhatsApp</span>
+</a>
 
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Project preview">
   <div class="box"><div class="img" id="lb-img"></div>
@@ -457,13 +470,28 @@ document.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
   navigator.clipboard?.writeText(v).then(()=>{b.textContent="Copied"},()=>{b.textContent="Select text"}).catch(()=>{});
   setTimeout(()=>b.textContent="Copy",1600);}));
 
-/* form */
+/* form → WhatsApp */
+const WA="8801309002664";
+const waLink=t=>"https://wa.me/"+WA+(t?"?text="+encodeURIComponent(t):"");
 document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();
   const g=id=>document.getElementById(id).value.trim();const out=document.getElementById("out");
-  if(!g("f-name")){out.hidden=false;out.textContent="Please add your name so Helena knows who to reply to.";return;}
-  out.hidden=false;
-  out.textContent=`Hi Helena, I'm ${g("f-name")}${g("f-phone")?" ("+g("f-phone")+")":""}.\nI'd like to book: ${g("f-type")}${g("f-date")?" on "+g("f-date"):""}.\n${g("f-msg")}\n\n→ Copy this and send it to WhatsApp +880 1309-002664 or framemotionbyhelen@gmail.com`;
+  if(!g("f-name")){out.hidden=false;out.textContent="Please add your name so Helena knows who to reply to.";document.getElementById("f-name").focus();return;}
+  let d=g("f-date");if(d){try{d=new Date(d+"T00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});}catch{}}
+  const lines=["Hi Helena! I'd like to book a shoot.","","Name: "+g("f-name")];
+  if(g("f-phone"))lines.push("Phone: "+g("f-phone"));
+  lines.push("Shoot: "+g("f-type"));
+  if(d)lines.push("Date: "+d);
+  if(g("f-msg"))lines.push("","Details: "+g("f-msg"));
+  lines.push("","(Sent from helenkhan.com)");
+  const url=waLink(lines.join("\n"));
+  const w=window.open(url,"_blank","noopener");
+  out.hidden=false;out.textContent="";
+  const p1=document.createElement("p");p1.style.margin="0 0 8px";
+  p1.textContent=w?"WhatsApp opened with your booking message. Just press Send.":"Tap the button below to send your booking on WhatsApp.";
+  const a=document.createElement("a");a.href=url;a.target="_blank";a.rel="noopener";a.className="btn";a.textContent="Open WhatsApp";
+  out.append(p1,a);
 });
+document.getElementById("wa-float").href=waLink("Hi Helena! I found you on helenkhan.com and would like to know more.");
 </script>
 
 </body>
