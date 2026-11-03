@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
-import { ADMINS, configured, hashCode, json, readJSON, writeJSON, PENDING_PATH } from '../_lib/common.js';
+import { ADMINS, configured, hashCode, json, readJSON, writeJSON, PENDING_PATH, guard } from '../_lib/common.js';
 
-export async function POST(req) {
+export const POST = guard(async (req) => {
   if (!configured() || !process.env.RESEND_API_KEY) return json({ error: 'Login is not set up yet. Please contact the site owner.' }, 503);
   const { email } = await req.json().catch(() => ({}));
   const e = String(email || '').trim().toLowerCase();
@@ -33,4 +33,4 @@ export async function POST(req) {
   });
   if (!r.ok) return json({ error: 'Could not send the email right now. Please try again in a minute.' }, 502);
   return json({ ok: true });
-}
+}, { write: true });

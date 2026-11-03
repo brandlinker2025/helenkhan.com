@@ -1,14 +1,16 @@
 import { del } from '@vercel/blob';
-import { CATEGORIES, MEDIA_PATH, clean, json, newId, readJSON, session, writeJSON, youtubeId } from './_lib/common.js';
+import { CATEGORIES, MEDIA_PATH, clean, guard, json, newId, readJSON, session, writeJSON, youtubeId } from './_lib/common.js';
 
 // Public: list of photos/videos Helena has added.
-export async function GET() {
+export const GET = guard(async () => {
   const data = await readJSON(MEDIA_PATH, { items: [] });
-  return json({ items: data.items || [] });
-}
+  // Only what the page needs: no storage paths or uploader emails go out publicly.
+  const items = (data.items || []).map(({ id, type, category, title, url, youtube }) => ({ id, type, category, title, url, youtube }));
+  return json({ items });
+});
 
 // Admin: add a YouTube video.
-export async function POST(req) {
+export const POST = guard(async (req) => {
   const s = session(req);
   if (!s) return json({ error: 'Please sign in again.' }, 401);
   const body = await req.json().catch(() => ({}));
@@ -24,10 +26,10 @@ export async function POST(req) {
   items.unshift(item);
   await writeJSON(MEDIA_PATH, { items });
   return json({ ok: true, item });
-}
+}, { write: true });
 
 // Admin: remove a photo or video.
-export async function DELETE(req) {
+export const DELETE = guard(async (req) => {
   const s = session(req);
   if (!s) return json({ error: 'Please sign in again.' }, 401);
   const id = new URL(req.url).searchParams.get('id');
@@ -36,6 +38,6 @@ export async function DELETE(req) {
   const item = items.find((x) => x.id === id);
   if (!item) return json({ error: 'Already removed.' }, 404);
   await writeJSON(MEDIA_PATH, { items: items.filter((x) => x.id !== id) });
-  if (item.type === 'photo' && item.url) await del(item.url).catch(() => {});
+  if (item.type === 'photo' && item.path) await del(item.path).catch(() => {});
   return json({ ok: true });
-}
+}, { write: true });

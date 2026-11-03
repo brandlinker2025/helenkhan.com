@@ -1,8 +1,8 @@
-import { configured, hashCode, json, readJSON, sign, writeJSON, PENDING_PATH } from '../_lib/common.js';
+import { configured, hashCode, json, readJSON, sign, writeJSON, PENDING_PATH, guard } from '../_lib/common.js';
 
 const DAYS = 30;
 
-export async function POST(req) {
+export const POST = guard(async (req) => {
   if (!configured()) return json({ error: 'Login is not set up yet.' }, 503);
   const { email, code } = await req.json().catch(() => ({}));
   const e = String(email || '').trim().toLowerCase();
@@ -23,4 +23,4 @@ export async function POST(req) {
   return json({ ok: true, email: e }, 200, {
     'set-cookie': `hk_session=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${DAYS * 86_400}`,
   });
-}
+}, { write: true });

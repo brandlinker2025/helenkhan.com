@@ -1,11 +1,11 @@
 import { put } from '@vercel/blob';
-import { CATEGORIES, MEDIA_PATH, clean, json, newId, readJSON, session, writeJSON } from './_lib/common.js';
+import { CATEGORIES, MEDIA_PATH, clean, guard, json, newId, readJSON, session, writeJSON } from './_lib/common.js';
 
 const TYPES = { 'image/webp': 'webp', 'image/jpeg': 'jpg', 'image/png': 'png' };
 const MAX = 4_300_000; // the admin page resizes photos first, so real uploads are far smaller
 
 // Admin: upload one photo (raw body). Headers: x-category, x-title (URI-encoded).
-export async function POST(req) {
+export const POST = guard(async (req) => {
   const s = session(req);
   if (!s) return json({ error: 'Please sign in again.' }, 401);
   const category = req.headers.get('x-category') || '';
@@ -25,8 +25,9 @@ export async function POST(req) {
   });
   const data = await readJSON(MEDIA_PATH, { items: [] });
   const items = data.items || [];
-  const item = { id: newId(), type: 'photo', category, title, url: blob.url, by: s.email, created: Date.now() };
+  // Public address on helenkhan.com; the storage address stays private.
+  const item = { id: newId(), type: 'photo', category, title, url: `/m/${blob.pathname}`, path: blob.pathname, by: s.email, created: Date.now() };
   items.unshift(item);
   await writeJSON(MEDIA_PATH, { items });
   return json({ ok: true, item });
-}
+}, { write: true });

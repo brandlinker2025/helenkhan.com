@@ -75,4 +75,21 @@ export function youtubeId(url) {
   return /^[A-Za-z0-9_-]{11}$/.test(s) ? s : null;
 }
 
+// Wrap every handler: no stack traces or provider error pages ever reach the browser,
+// and write requests must come from helenkhan.com itself.
+export function guard(fn, { write = false } = {}) {
+  return async (req) => {
+    try {
+      if (write) {
+        const origin = req.headers.get('origin');
+        const host = req.headers.get('host');
+        if (origin && host && new URL(origin).host !== host) return json({ error: 'Not allowed.' }, 403);
+      }
+      return await fn(req);
+    } catch {
+      return json({ error: 'Something went wrong. Please try again.' }, 500);
+    }
+  };
+}
+
 export const clean = (t, n = 80) => String(t || '').replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, n);
