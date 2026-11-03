@@ -54,6 +54,13 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px
 .hud-row{display:flex;justify-content:space-between;gap:12px}
 .hud .mono{color:#efe7dacc}
 .rec{display:inline-flex;align-items:center;gap:8px}
+.sound{position:absolute;left:50%;bottom:clamp(10px,2vw,22px);transform:translateX(-50%);z-index:2;display:inline-flex;align-items:center;gap:8px;background:#0f0d0bb3;color:#efe7da;border:1px solid #efe7da55;border-radius:99px;padding:7px 14px;font:500 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px)}
+.sound:hover{border-color:var(--accent);color:var(--accent)}
+.sound i{width:14px;height:10px;display:inline-flex;align-items:flex-end;gap:2px}
+.sound i::before,.sound i::after{content:"";width:3px;height:40%;background:currentColor;box-shadow:5px 0 0 currentColor}
+.sound[aria-pressed="true"] i::before{animation:eq .9s ease-in-out infinite alternate}
+.sound[aria-pressed="true"] i::after{animation:eq .7s ease-in-out infinite alternate-reverse}
+@keyframes eq{to{height:100%}}
 .rec i{width:9px;height:9px;border-radius:50%;background:var(--rec);animation:blink 1.2s steps(2) infinite}
 @keyframes blink{50%{opacity:.15}}
 .corners::before,.corners::after{content:"";position:absolute;width:26px;height:26px;border:1.5px solid #efe7da99}
@@ -194,7 +201,8 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
 <main class="wrap" id="top">
   <header class="hero">
     <div class="monitor corners" aria-hidden="true">
-      <video id="hero-video" src="video/hero.mp4" poster="video/hero-poster.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+      <video id="hero-video" src="video/hero.mp4" poster="video/hero-poster.webp" autoplay muted loop playsinline preload="auto" aria-label="Showreel: behind the scenes at a wedding"></video>
+      <button class="sound" id="sound" type="button" aria-pressed="false"><i aria-hidden="true"></i><span>Sound on</span></button>
       <div class="hud">
         <div class="hud-row"><span class="mono rec"><i></i>REC · A-CAM</span><span class="mono" id="tc">00:00:00:00</span></div>
         <div class="hud-row"><span class="mono">4K · 24 FPS · 2.39:1</span><span class="mono">ISO 800 · 3200K</span></div>
@@ -438,6 +446,8 @@ setInterval(()=>{fr++;const f=fr%24,s=Math.floor(fr/24)%60,m=Math.floor(fr/1440)
 const hv=document.getElementById("hero-video");
 if(matchMedia("(prefers-reduced-motion: reduce)").matches){hv.removeAttribute("autoplay");hv.pause();}
 else{const go=()=>{const p=hv.play();if(p&&p.catch)p.catch(()=>{});};go();document.addEventListener("visibilitychange",()=>{if(!document.hidden)go();});}
+const sb=document.getElementById("sound");
+sb.addEventListener("click",()=>{hv.muted=!hv.muted;if(!hv.muted){hv.volume=.8;const p=hv.play();if(p&&p.catch)p.catch(()=>{});}sb.setAttribute("aria-pressed",String(!hv.muted));sb.lastElementChild.textContent=hv.muted?"Sound on":"Sound off";});
 
 /* copy */
 document.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
