@@ -54,7 +54,9 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px
 .hud-row{display:flex;justify-content:space-between;gap:12px}
 .hud .mono{color:#efe7dacc}
 .rec{display:inline-flex;align-items:center;gap:8px}
-.sound{position:absolute;left:50%;bottom:clamp(10px,2vw,22px);transform:translateX(-50%);z-index:2;display:inline-flex;align-items:center;gap:8px;background:#0f0d0bb3;color:#efe7da;border:1px solid #efe7da55;border-radius:99px;padding:7px 14px;font:500 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px)}
+.hero-monitor{aspect-ratio:16/9;background:#000}
+.hero-monitor .hud-iso{visibility:hidden}
+.sound{position:absolute;right:clamp(10px,2vw,22px);bottom:clamp(10px,2vw,22px);z-index:2;display:inline-flex;align-items:center;gap:8px;background:#0f0d0bb3;color:#efe7da;border:1px solid #efe7da55;border-radius:99px;padding:7px 14px;font:500 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px)}
 .sound:hover{border-color:var(--accent);color:var(--accent)}
 .sound i{width:14px;height:10px;display:inline-flex;align-items:flex-end;gap:2px}
 .sound i::before,.sound i::after{content:"";width:3px;height:40%;background:currentColor;box-shadow:5px 0 0 currentColor}
@@ -200,12 +202,12 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
 
 <main class="wrap" id="top">
   <header class="hero">
-    <div class="monitor corners" aria-hidden="true">
-      <video id="hero-video" src="video/hero.mp4" poster="video/hero-poster.webp" autoplay muted loop playsinline preload="auto" aria-label="Showreel: behind the scenes at a wedding"></video>
+    <div class="monitor corners hero-monitor">
+      <video id="hero-video" poster="video/hero-poster.webp" autoplay muted loop playsinline preload="auto" aria-label="Showreel: behind the scenes at a wedding"><source src="video/hero-1280.mp4" type="video/mp4" media="(max-width: 900px)"><source src="video/hero.mp4" type="video/mp4"></video>
       <button class="sound" id="sound" type="button" aria-pressed="false"><i aria-hidden="true"></i><span>Sound on</span></button>
       <div class="hud">
         <div class="hud-row"><span class="mono rec"><i></i>REC · A-CAM</span><span class="mono" id="tc">00:00:00:00</span></div>
-        <div class="hud-row"><span class="mono">4K · 24 FPS · 2.39:1</span><span class="mono">ISO 800 · 3200K</span></div>
+        <div class="hud-row"><span class="mono">4K · 24 FPS · 2.39:1</span><span class="mono hud-iso">ISO 800 · 3200K</span></div>
       </div>
     </div>
     <div class="hero-copy">
