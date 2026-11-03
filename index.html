@@ -49,7 +49,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px
 .hero{padding-block:56px 40px}
 .monitor{position:relative;aspect-ratio:2.39/1;max-width:100%;border:1px solid var(--line);overflow:hidden;
   background:radial-gradient(120% 90% at 70% 40%,#5a3b1e 0%,#2a1c10 35%,#0f0b08 75%)}
-.monitor canvas{position:absolute;inset:0;width:100%;height:100%}
+.monitor video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .hud{position:absolute;inset:0;padding:clamp(10px,2vw,22px);display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
 .hud-row{display:flex;justify-content:space-between;gap:12px}
 .hud .mono{color:#efe7dacc}
@@ -194,7 +194,7 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
 <main class="wrap" id="top">
   <header class="hero">
     <div class="monitor corners" aria-hidden="true">
-      <canvas id="grain"></canvas>
+      <video id="hero-video" src="video/hero.mp4" poster="video/hero-poster.webp" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
       <div class="hud">
         <div class="hud-row"><span class="mono rec"><i></i>REC · A-CAM</span><span class="mono" id="tc">00:00:00:00</span></div>
         <div class="hud-row"><span class="mono">4K · 24 FPS · 2.39:1</span><span class="mono">ISO 800 · 3200K</span></div>
@@ -434,24 +434,10 @@ const tc=document.getElementById("tc");let fr=0;
 setInterval(()=>{fr++;const f=fr%24,s=Math.floor(fr/24)%60,m=Math.floor(fr/1440)%60,h=Math.floor(fr/86400);
   tc.textContent=[h,m,s,f].map(n=>String(n).padStart(2,"0")).join(":");},1000/24);
 
-/* film grain + light leak */
-const cv=document.getElementById("grain"),cx=cv.getContext("2d");
-const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-function size(){cv.width=Math.min(cv.clientWidth,900);cv.height=Math.round(cv.width/2.39);}
-size();addEventListener("resize",size);
-let t=0;
-function draw(){t+=.006;const w=cv.width,h=cv.height;cx.clearRect(0,0,w,h);
-  const gx=w*(.6+.25*Math.sin(t)),g=cx.createRadialGradient(gx,h*.45,0,gx,h*.45,w*.5);
-  g.addColorStop(0,"rgba(232,162,74,.35)");g.addColorStop(1,"rgba(232,162,74,0)");cx.fillStyle=g;cx.fillRect(0,0,w,h);
-  /* horizon silhouette: a rider on the road */
-  cx.fillStyle="rgba(10,7,5,.85)";cx.fillRect(0,h*.78,w,h*.22);
-  const rx=((t*60)%(w+120))-60;cx.beginPath();cx.arc(rx,h*.76,h*.045,0,7);cx.arc(rx+h*.16,h*.76,h*.045,0,7);cx.fill();
-  cx.fillRect(rx,h*.66,h*.16,h*.07);cx.beginPath();cx.arc(rx+h*.09,h*.6,h*.03,0,7);cx.fill();
-  const id=cx.getImageData(0,0,w,h),d=id.data;
-  for(let i=0;i<d.length;i+=16){const n=(Math.random()*28)|0;d[i]+=n;d[i+1]+=n;d[i+2]+=n;}
-  cx.putImageData(id,0,0);
-  if(!reduce)requestAnimationFrame(draw);}
-draw();
+/* hero video: respect reduced-motion, keep playing when the tab returns */
+const hv=document.getElementById("hero-video");
+if(matchMedia("(prefers-reduced-motion: reduce)").matches){hv.removeAttribute("autoplay");hv.pause();}
+else{const p=hv.play();if(p&&p.catch)p.catch(()=>{});}
 
 /* copy */
 document.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
