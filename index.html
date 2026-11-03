@@ -171,7 +171,8 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
 /* lightbox */
 .lb{position:fixed;inset:0;z-index:20;background:#000e;display:grid;place-items:center;padding:24px}
 .lb .box{width:min(960px,100%)}
-.lb .img{aspect-ratio:16/9;max-width:100%;border:1px solid var(--line)}
+.lb .img{aspect-ratio:16/9;max-width:100%;border:1px solid var(--line);position:relative}
+.lb .img iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .lb .bar{display:flex;justify-content:space-between;gap:12px;margin-top:12px;align-items:center}
 .lb h3{font-size:1.6rem}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
@@ -277,7 +278,7 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
 
   <section id="reel" aria-labelledby="reel-h">
     <div class="reel">
-      <div class="monitor corners" role="img" aria-label="Showreel preview">
+      <div class="monitor corners" id="reel-monitor" role="img" aria-label="Showreel preview">
         <div class="hud"><div class="hud-row"><span class="mono">Showreel 2026</span><span class="mono">01:42</span></div><div class="hud-row"><span class="mono">16:9 · 4K</span><span class="mono">Wedding · Ride · Food</span></div></div>
         <div class="bigplay"></div>
       </div>
@@ -285,7 +286,7 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
         <p class="mono">Reel 05 · Showreel</p>
         <h2 style="font-size:clamp(2rem,4.4vw,3.2rem)" id="reel-h">One minute, <em style="color:var(--accent);font-weight:400">every story</em></h2>
         <p style="color:var(--muted)">Weddings, rides, celebrations and kitchens — cut together so you can feel the style before you book.</p>
-        <a class="btn ghost" href="#contact">Ask for the full reel</a>
+        <a class="btn ghost" id="reel-btn" href="#contact">Ask for the full reel</a>
         <div class="specs">
           <div><strong>4K</strong><span class="mono">Capture</span></div>
           <div><strong>24 / 60</strong><span class="mono">Frame rates</span></div>
@@ -372,25 +373,61 @@ const items=[
 const bg=(c,i)=>{const [a,b,d]=looks[c];const x=20+(i*37)%60,y=25+(i*23)%50;
   return `radial-gradient(70% 60% at ${x}% ${y}%,${b}cc,transparent 60%),radial-gradient(90% 80% at ${100-x}% 80%,${a},transparent 70%),${d}`;};
 const grid=document.getElementById("grid");
-items.forEach((it,i)=>{
-  const b=document.createElement("button");
-  b.className="frame"+(it.w?" wide":"");b.dataset.c=it.c;
-  b.innerHTML=(it.img?`<img class="img" src="${it.img}" alt="${it.t}" loading="lazy">`:`<div class="img" style="background:${bg(it.c,i)}"></div>`)+`<span class="tag">${it.v?"Film":"Photo"} · F${String(i+1).padStart(3,"0")}</span>${it.v?'<span class="play"></span>':""}<div class="cap"><div><p class="mono" style="margin:0">${it.m}</p><h3>${it.t}</h3></div></div>`;
-  b.addEventListener("click",()=>openLb(it,i));
-  grid.appendChild(b);
-});
+const lb=document.getElementById("lb"),lbImg=document.getElementById("lb-img");
+const esc=t=>String(t||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ytThumb=id=>`https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const ytEmbed=id=>`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+let activeFilter="all";
+function render(list){
+  grid.innerHTML="";
+  list.forEach((it,i)=>{
+    const b=document.createElement("button");
+    b.className="frame"+(it.w?" wide":"");b.dataset.c=it.c;
+    const src=it.img||(it.yt?ytThumb(it.yt):"");
+    const media=src?`<img class="img" src="${esc(src)}" alt="${esc(it.t)}" loading="lazy">`:`<div class="img" style="background:${bg(it.c,i)}"></div>`;
+    b.innerHTML=media+`<span class="tag">${it.v?"Film":"Photo"} · F${String(i+1).padStart(3,"0")}</span>${it.v?'<span class="play"></span>':""}<div class="cap"><div><p class="mono" style="margin:0">${esc(it.m)}</p><h3>${esc(it.t)}</h3></div></div>`;
+    b.addEventListener("click",()=>openLb(it,i));
+    b.hidden=!(activeFilter==="all"||it.c===activeFilter);
+    grid.appendChild(b);
+  });
+}
 document.querySelectorAll(".chip").forEach(ch=>ch.addEventListener("click",()=>{
   document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===ch));
-  const f=ch.dataset.f;
-  grid.querySelectorAll(".frame").forEach(fr=>fr.hidden=!(f==="all"||fr.dataset.c===f));
+  activeFilter=ch.dataset.f;
+  grid.querySelectorAll(".frame").forEach(fr=>fr.hidden=!(activeFilter==="all"||fr.dataset.c===activeFilter));
 }));
-const lb=document.getElementById("lb");
-function openLb(it,i){document.getElementById("lb-img").style.background=it.img?`#000 url(${it.img}) center/contain no-repeat`:bg(it.c,i);
+function openLb(it,i){
+  lbImg.innerHTML="";
+  if(it.yt){lbImg.style.background="#000";lbImg.innerHTML=`<iframe src="${ytEmbed(it.yt)}" title="${esc(it.t)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;}
+  else lbImg.style.background=it.img?`#000 url(${it.img}) center/contain no-repeat`:bg(it.c,i);
   document.getElementById("lb-meta").textContent=it.m;document.getElementById("lb-title").textContent=it.t;
   lb.hidden=false;document.getElementById("lb-close").focus();}
-document.getElementById("lb-close").onclick=()=>lb.hidden=true;
-lb.addEventListener("click",e=>{if(e.target===lb)lb.hidden=true});
-addEventListener("keydown",e=>{if(e.key==="Escape")lb.hidden=true});
+function closeLb(){lb.hidden=true;lbImg.innerHTML="";}
+document.getElementById("lb-close").onclick=closeLb;
+lb.addEventListener("click",e=>{if(e.target===lb)closeLb()});
+addEventListener("keydown",e=>{if(e.key==="Escape")closeLb()});
+render(items);
+
+/* live media added by Helena in /admin */
+const catLabel={wedding:"Wedding",birthday:"Birthday",biker:"Biker ride",food:"Restaurant"};
+fetch("/api/media",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{
+  if(!d||!Array.isArray(d.items))return;
+  const live=d.items.filter(x=>catLabel[x.category]).map(x=>({c:x.category,t:x.title||catLabel[x.category],m:catLabel[x.category]+(x.type==="video"?" · Film":" · Photo"),v:x.type==="video"?1:0,img:x.type==="photo"?x.url:"",yt:x.type==="video"?x.youtube:""}));
+  if(live.length){
+    const has=new Set(live.map(x=>x.c));
+    const keep=items.filter(x=>x.img||!has.has(x.c));
+    render([...live,...keep]);
+  }
+  const reel=d.items.find(x=>x.category==="showreel"&&x.youtube);
+  if(reel){
+    const mon=document.getElementById("reel-monitor"),btn=document.getElementById("reel-btn");
+    mon.style.background=`#000 url(${ytThumb(reel.youtube)}) center/cover`;
+    mon.style.cursor="pointer";mon.setAttribute("role","button");mon.tabIndex=0;mon.setAttribute("aria-label","Play showreel");
+    const play=()=>{mon.innerHTML=`<iframe src="${ytEmbed(reel.youtube)}" title="Showreel" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>`;};
+    mon.addEventListener("click",play,{once:true});mon.addEventListener("keydown",e=>{if(e.key==="Enter")play()},{once:true});
+    btn.textContent="Watch on YouTube ↗";btn.href="https://www.youtube.com/watch?v="+reel.youtube;btn.target="_blank";btn.rel="noopener";
+  }
+}).catch(()=>{});
 
 /* timecode */
 const tc=document.getElementById("tc");let fr=0;
