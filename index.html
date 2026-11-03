@@ -189,7 +189,9 @@ footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-
 .lb{position:fixed;inset:0;z-index:20;background:#000e;display:grid;place-items:center;padding:24px}
 .lb .box{width:min(960px,100%)}
 .lb .img{aspect-ratio:16/9;max-width:100%;border:1px solid var(--line);position:relative}
-.lb .img iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lb .img iframe,.lb .img video{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;background:#000}
+.lb.tall .box{width:min(420px,100%)}
+.lb.tall .img{aspect-ratio:9/16;max-height:78vh;margin:0 auto}
 .lb .bar{display:flex;justify-content:space-between;gap:12px;margin-top:12px;align-items:center}
 .lb h3{font-size:1.6rem}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
@@ -388,7 +390,7 @@ const items=[
   {c:"birthday",t:"Aria Turns Five",m:"Birthday · Dhanmondi",v:0},
   {c:"wedding",t:"Reception Nights",m:"Wedding · Highlight film",v:1},
   {c:"food",t:"Chocolate Ganache Cake",m:"Restaurant · FB page",v:0,w:1,img:"img/cake.webp"},
-  {c:"biker",t:"Girls Who Ride",m:"Community event",v:0},
+  {c:"biker",t:"TAILG Uttara Grand Opening",m:"EV brand event · Behind the scenes",v:1,img:"video/tailg-poster.webp",mp4:"video/tailg-uttara-bts-720.mp4",tall:1},
   {c:"birthday",t:"Fifty & Fabulous",m:"Milestone birthday",v:1},
   {c:"wedding",t:"Bou er Saaj",m:"Bridal portraits",v:0},
   {c:"food",t:"Croquembouche Tower",m:"Restaurant · Pastry",v:0,img:"img/croquembouche.webp"}
@@ -420,8 +422,9 @@ document.querySelectorAll(".chip").forEach(ch=>ch.addEventListener("click",()=>{
   grid.querySelectorAll(".frame").forEach(fr=>fr.hidden=!(activeFilter==="all"||fr.dataset.c===activeFilter));
 }));
 function openLb(it,i){
-  lbImg.innerHTML="";
-  if(it.yt){lbImg.style.background="#000";lbImg.innerHTML=`<iframe src="${ytEmbed(it.yt)}" title="${esc(it.t)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;}
+  lbImg.innerHTML="";lb.classList.toggle("tall",!!it.tall);
+  if(it.mp4){lbImg.style.background="#000";lbImg.innerHTML=`<video src="${esc(it.mp4)}" poster="${esc(it.img)}" controls autoplay playsinline></video>`;}
+  else if(it.yt){lbImg.style.background="#000";lbImg.innerHTML=`<iframe src="${ytEmbed(it.yt)}" title="${esc(it.t)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;}
   else lbImg.style.background=it.img?`#000 url(${it.img}) center/contain no-repeat`:bg(it.c,i);
   document.getElementById("lb-meta").textContent=it.m;document.getElementById("lb-title").textContent=it.t;
   lb.hidden=false;document.getElementById("lb-close").focus();}
