@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Helena Khan — Dhaka-based cinematographer. Wedding films, birthdays, biker rides and restaurant branding.">
+<meta property="og:title" content="Helena Khan — Cinematographer">
+<meta property="og:description" content="Turning fleeting moments into timeless cinematic stories.">
+<meta property="og:image" content="/img/cake.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230f0d0b'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23e8a24a' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23e8a24a'/%3E%3C/svg%3E">
+<title>Helena Khan — Cinematographer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,400;1,6..96,600&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a cinema timeline — sections are "reels", every frame carries timecode + aspect labels like a camera monitor */
+:root{
+  --bg:#0f0d0b; --bg-2:#17140f; --line:#2c261e; --fg:#efe7da; --muted:#9c9183;
+  --accent:#e8a24a; /* tungsten 3200K */ --accent-ink:#1a1206; --rec:#e0473a;
+  --display:"Bodoni Moda", "Didot", Georgia, serif;
+  --body:"Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  --w:1180px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font:16px/1.65 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit}
+.wrap{max-width:var(--w);margin:0 auto}
+.mono{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:500;text-wrap:balance;margin:0;line-height:1.05}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.logo{font-family:var(--display);font-style:italic;font-size:1.35rem;text-decoration:none}
+.logo b{color:var(--accent);font-weight:600}
+.links{display:flex;gap:22px;align-items:center}
+.links a{text-decoration:none;font-size:.9rem;color:var(--muted)}
+.links a:hover{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:2px;padding:11px 18px;font:700 .85rem var(--body);text-decoration:none;cursor:pointer;letter-spacing:.02em}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+@media (max-width:760px){.links a:not(.btn){display:none}}
+
+/* hero */
+.hero{padding-block:56px 40px}
+.monitor{position:relative;aspect-ratio:2.39/1;max-width:100%;border:1px solid var(--line);overflow:hidden;
+  background:radial-gradient(120% 90% at 70% 40%,#5a3b1e 0%,#2a1c10 35%,#0f0b08 75%)}
+.monitor canvas{position:absolute;inset:0;width:100%;height:100%}
+.hud{position:absolute;inset:0;padding:clamp(10px,2vw,22px);display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.hud-row{display:flex;justify-content:space-between;gap:12px}
+.hud .mono{color:#efe7dacc}
+.rec{display:inline-flex;align-items:center;gap:8px}
+.rec i{width:9px;height:9px;border-radius:50%;background:var(--rec);animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:.15}}
+.corners::before,.corners::after{content:"";position:absolute;width:26px;height:26px;border:1.5px solid #efe7da99}
+.corners::before{top:14px;left:14px;border-right:0;border-bottom:0}
+.corners::after{bottom:14px;right:14px;border-left:0;border-top:0}
+.hero-copy{display:grid;grid-template-columns:1.4fr 1fr;gap:40px;align-items:end;margin-top:36px}
+.hero h1{font-size:clamp(3rem,9vw,7.2rem);letter-spacing:-.02em}
+.hero h1 em{color:var(--accent);font-weight:400}
+.hero p{color:var(--muted);max-width:44ch;margin:0 0 20px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+@media (max-width:820px){.hero-copy{grid-template-columns:1fr;gap:18px}}
+
+/* section head */
+section{padding-block:72px;border-top:1px solid var(--line)}
+.head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin-bottom:32px}
+.head h2{font-size:clamp(2.2rem,5vw,3.6rem)}
+.head h2 em{font-weight:400;color:var(--accent)}
+
+/* filters + grid */
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 14px;border-radius:99px;font:500 .82rem var(--body);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.frame{grid-column:span 4;position:relative;overflow:hidden;border:1px solid var(--line);background:var(--bg-2);cursor:pointer;padding:0;color:inherit;text-align:left;font:inherit}
+.frame.wide{grid-column:span 8}
+.frame .img{aspect-ratio:4/5;max-width:100%;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.frame.wide .img{aspect-ratio:auto;height:100%;min-height:100%}
+.frame:hover .img{transform:scale(1.04)}
+.frame .cap{position:absolute;inset:auto 0 0 0;padding:16px;background:linear-gradient(transparent,#0008 40%,#000c);display:flex;justify-content:space-between;align-items:end;gap:10px}
+.frame h3{font-size:1.4rem;color:#f5ede1}
+.frame .mono{color:#efe7dabb}
+.frame .tag{position:absolute;top:12px;left:12px;background:#0009;color:#efe7da;padding:4px 8px;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+.frame .play{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.frame .play::after{content:"";border-left:10px solid var(--accent-ink);border-top:6px solid transparent;border-bottom:6px solid transparent;margin-left:3px}
+.frame[hidden]{display:none}
+@media (max-width:900px){.frame,.frame.wide{grid-column:span 6}.frame.wide .img{aspect-ratio:4/5;height:auto}}
+@media (max-width:560px){.frame,.frame.wide{grid-column:span 12}}
+
+/* categories */
+/* case study */
+.case{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:start}
+.case .shots{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.case .shots img{display:block;width:100%;aspect-ratio:4/5;max-width:100%;object-fit:cover;border:1px solid var(--line)}
+.case .shots img:first-child{grid-column:1/-1;aspect-ratio:16/10}
+img.img{display:block;width:100%;object-fit:cover}
+.portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:30% 30%}
+.case dl{display:grid;grid-template-columns:auto 1fr;gap:12px 20px;margin:22px 0 0}
+.case dt{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+.case dd{margin:0;color:var(--muted)}
+@media (max-width:820px){.case{grid-template-columns:1fr}}
+/* pricing */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.plan{border:1px solid var(--line);padding:26px 22px;display:flex;flex-direction:column;gap:12px}
+.plan.hi{border-color:var(--accent);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 9%,var(--bg)),var(--bg) 60%)}
+.plan h3{font-size:1.9rem}
+.plan .price{font-family:var(--display);font-size:1.5rem}
+.plan .split{font-size:.82rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin:0}
+.plan .sub{margin:0;font-size:.9rem}
+.plan ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:.92rem;color:var(--muted);flex:1}
+.plan li::before{content:"✓ ";color:var(--accent)}
+@media (max-width:820px){.plans{grid-template-columns:1fr}}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.cat{background:var(--bg);padding:26px 22px;display:flex;flex-direction:column;gap:10px}
+.cat h3{font-size:1.7rem}
+.cat p{color:var(--muted);margin:0;font-size:.94rem}
+.cat ul{margin:6px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+.cat li::before{content:"— ";color:var(--accent)}
+@media (max-width:820px){.cats{grid-template-columns:1fr}}
+
+/* reel */
+.reel{display:grid;grid-template-columns:1.5fr 1fr;gap:32px;align-items:center}
+.reel .monitor{aspect-ratio:16/9;background:linear-gradient(135deg,#1e2a33,#3b2a1a 60%,#0d0b09)}
+.bigplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;border:1.5px solid #efe7dacc;display:grid;place-items:center;background:#0006}
+.bigplay::after{content:"";border-left:20px solid #efe7da;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px;margin-top:22px}
+.specs div{border-top:1px solid var(--line);padding-top:10px}
+.specs strong{display:block;font-family:var(--display);font-size:1.6rem;font-weight:500}
+@media (max-width:820px){.reel{grid-template-columns:1fr}}
+
+/* process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;counter-reset:s}
+.step{border-top:2px solid var(--accent);padding-top:16px}
+.step .mono{color:var(--accent)}
+.step h3{font-size:1.5rem;margin:6px 0 8px}
+.step p{color:var(--muted);margin:0;font-size:.93rem}
+@media (max-width:820px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+
+/* about */
+.about{display:grid;grid-template-columns:1fr 1.3fr;gap:48px;align-items:center}
+.portrait{aspect-ratio:4/5;max-width:100%;border:1px solid var(--line);position:relative;overflow:hidden;
+  background:radial-gradient(80% 60% at 50% 35%,#6b4a2b,#24180e 70%,#0f0b08)}
+.portrait span{position:absolute;bottom:14px;left:14px}
+.about blockquote{font-family:var(--display);font-style:italic;font-size:clamp(1.6rem,3.2vw,2.4rem);line-height:1.2;margin:0 0 20px;text-wrap:balance}
+.about p{color:var(--muted);max-width:60ch}
+@media (max-width:820px){.about{grid-template-columns:1fr}}
+
+/* contact */
+.contact{display:grid;grid-template-columns:1fr 1.2fr;gap:48px}
+.info{display:flex;flex-direction:column;gap:18px}
+.info .row{border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.info .val{font-size:1.05rem;user-select:all}
+.copy{background:none;border:1px solid var(--line);color:var(--muted);font:500 .75rem var(--mono);padding:5px 9px;cursor:pointer;border-radius:2px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+form .full{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:6px;font-size:.82rem;color:var(--muted)}
+input,select,textarea{background:var(--bg-2);border:1px solid var(--line);color:var(--fg);padding:12px;font:15px var(--body);border-radius:2px;width:100%}
+textarea{min-height:110px;resize:vertical}
+.out{grid-column:1/-1;background:var(--bg-2);border:1px dashed var(--accent);padding:14px;font-size:.9rem;white-space:pre-wrap}
+@media (max-width:820px){.contact{grid-template-columns:1fr}}
+@media (max-width:480px){form{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);padding-block:28px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:20;background:#000e;display:grid;place-items:center;padding:24px}
+.lb .box{width:min(960px,100%)}
+.lb .img{aspect-ratio:16/9;max-width:100%;border:1px solid var(--line)}
+.lb .bar{display:flex;justify-content:space-between;gap:12px;margin-top:12px;align-items:center}
+.lb h3{font-size:1.6rem}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
+</style>
+<style>html,body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<nav aria-label="Main">
+  <div class="wrap">
+    <a class="logo" href="#top">Helena <b>Khan</b></a>
+    <div class="links">
+      <a href="#work">Work</a><a href="#services">Services</a><a href="#case">Case study</a><a href="#pricing">Pricing</a><a href="#about">About</a>
+      <a class="btn" href="#contact">Book a shoot</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+  <header class="hero">
+    <div class="monitor corners" aria-hidden="true">
+      <canvas id="grain"></canvas>
+      <div class="hud">
+        <div class="hud-row"><span class="mono rec"><i></i>REC · A-CAM</span><span class="mono" id="tc">00:00:00:00</span></div>
+        <div class="hud-row"><span class="mono">4K · 24 FPS · 2.39:1</span><span class="mono">ISO 800 · 3200K</span></div>
+      </div>
+    </div>
+    <div class="hero-copy">
+      <h1>Helena<br><em>Khan</em></h1>
+      <div>
+        <p class="mono" style="margin-bottom:10px;color:var(--accent)">Cinematographer · Dhaka, Bangladesh</p>
+        <p><strong style="color:var(--fg);font-weight:500">Capturing emotions, speed and stories through a cinematic lens.</strong> Turning fleeting moments into timeless cinematic stories, from high-energy biker rides and joyful celebrations to premium culinary branding.</p>
+        <div class="cta"><a class="btn" href="#contact">Book a shoot</a><a class="btn ghost" href="#work">View work</a></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="work" aria-labelledby="work-h">
+    <div class="head">
+      <div><p class="mono">Reel 01 · Selected work</p><h2 id="work-h">Frames that <em>stay</em></h2></div>
+      <div class="filters" role="group" aria-label="Filter work">
+        <button class="chip" aria-pressed="true" data-f="all">All</button>
+        <button class="chip" aria-pressed="false" data-f="wedding">Weddings</button>
+        <button class="chip" aria-pressed="false" data-f="birthday">Birthdays</button>
+        <button class="chip" aria-pressed="false" data-f="biker">Biker rides</button>
+        <button class="chip" aria-pressed="false" data-f="food">Restaurant</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="mono" style="margin-top:16px">Gradient frames are placeholders until the rest of the photos arrive.</p>
+  </section>
+
+  <section id="services" aria-labelledby="svc-h">
+    <div class="head"><div><p class="mono">Reel 02 · Services</p><h2 id="svc-h">What I <em>shoot</em></h2></div></div>
+    <div class="cats">
+      <div class="cat"><p class="mono">Weddings &amp; Birthdays</p><h3>Event Cinematography</h3><p>Birthdays, weddings and private celebrations captured with cinematic grace and vibrant emotion.</p>
+        <ul><li>Holud, biye &amp; reception coverage</li><li>Highlight film + full edit</li><li>Album-ready edited photos</li></ul></div>
+      <div class="cat"><p class="mono">Biker Stories &amp; Rides</p><h3>Biker &amp; Adventure Shoots</h3><p>High-octane action shots, rolling footage and community ride coverage made for biking enthusiasts.</p>
+        <ul><li>Rolling &amp; tracking shots</li><li>Ride and tour films</li><li>Short-form reels</li></ul></div>
+      <div class="cat"><p class="mono">Restaurant &amp; Food</p><h3>Restaurant &amp; Commercial Branding</h3><p>End-to-end visual content, from mouth-watering food videography and posters to complete Facebook page building and management.</p>
+        <ul><li>Food &amp; menu photography</li><li>Promo videos &amp; posters</li><li>Facebook page build &amp; management</li></ul></div>
+    </div>
+  </section>
+
+  <section id="case" aria-labelledby="case-h">
+    <div class="case">
+      <div>
+        <p class="mono">Reel 03 · Case study</p>
+        <h2 id="case-h" style="font-size:clamp(2rem,4.6vw,3.4rem)">A restaurant’s whole <em style="color:var(--accent);font-weight:400">visual identity</em></h2>
+        <p style="color:var(--muted);max-width:56ch">For a well-known Dhaka restaurant, Helena handled the complete Facebook page and all video content, from first shoot to daily posting.</p>
+        <dl>
+          <dt>Brief</dt><dd>Make the page look as premium as the dining room and keep it active every week.</dd>
+          <dt>Work</dt><dd>Food and menu photography, promo videos, reels, posters, page setup and ongoing management.</dd>
+          <dt>Result</dt><dd>A consistent, cinematic page with viral-ready video content. <span class="mono" style="font-size:.66rem">Add real reach &amp; follower numbers</span></dd>
+        </dl>
+        <div class="cta" style="margin-top:22px"><a class="btn" href="#contact">Get the same for your restaurant</a></div>
+      </div>
+      <div class="shots">
+        <img src="img/cake.webp" alt="Chocolate ganache cake presented in a bright kitchen" loading="lazy">
+        <img src="img/brownies.webp" alt="Board of brownies with white chocolate drizzle" loading="lazy">
+        <img src="img/croquembouche.webp" alt="Croquembouche tower with spun sugar" loading="lazy" style="object-position:75% 50%">
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" aria-labelledby="price-h">
+    <div class="head"><div><p class="mono">Reel 04 · Packages</p><h2 id="price-h">Pick your <em>package</em></h2></div>
+      <p style="color:var(--muted);max-width:40ch;margin:0">Wedding &amp; event packages with videography and photography together. Restaurant and biker projects are quoted separately.</p></div>
+    <div class="plans">
+      <div class="plan hi"><p class="mono" style="color:var(--accent)">01 · Best experience</p><h3>Premium</h3><p class="price">৳25,000</p><p class="sub">ভিডিওগ্রাফি + ফটোগ্রাফি</p>
+        <ul><li>Cinematography: ৫ ঘণ্টা</li><li>Professional Photography: ৫ ঘণ্টা</li><li>Cinematic Video Editing</li><li>Professional Color Grading</li><li>Edited Wedding Photos</li><li>Premium Event Coverage</li></ul>
+        <p class="split">ভিডিওগ্রাফি ৳১৫,০০০ + ফটোগ্রাফি ৳১০,০০০</p>
+        <a class="btn" href="#contact">Book Premium</a></div>
+      <div class="plan"><p class="mono">02</p><h3>Regular</h3><p class="price">৳20,000</p><p class="sub">ভিডিওগ্রাফি + ফটোগ্রাফি</p>
+        <ul><li>Cinematography: ৪ ঘণ্টা</li><li>Professional Photography: ৪ ঘণ্টা</li><li>Cinematic Video Editing</li><li>Professional Color Grading</li><li>Edited Wedding Photos</li><li>Standard Event Coverage</li></ul>
+        <p class="split">ভিডিওগ্রাফি ৳১২,০০০ + ফটোগ্রাফি ৳৮,০০০</p>
+        <a class="btn ghost" href="#contact">Book Regular</a></div>
+      <div class="plan"><p class="mono">03</p><h3>Light</h3><p class="price">৳15,000</p><p class="sub">ভিডিওগ্রাফি + ফটোগ্রাফি</p>
+        <ul><li>Cinematography: ৩ ঘণ্টা</li><li>Professional Photography: ৩ ঘণ্টা</li><li>Basic Cinematic Video Editing</li><li>Basic Color Grading</li><li>Edited Wedding Photos</li><li>Essential Event Coverage</li></ul>
+        <p class="split">ভিডিওগ্রাফি ৳১০,০০০ + ফটোগ্রাফি ৳৫,০০০</p>
+        <a class="btn ghost" href="#contact">Book Light</a></div>
+    </div>
+  </section>
+
+  <section id="reel" aria-labelledby="reel-h">
+    <div class="reel">
+      <div class="monitor corners" role="img" aria-label="Showreel placeholder">
+        <div class="hud"><div class="hud-row"><span class="mono">Showreel 2026</span><span class="mono">01:42</span></div><div class="hud-row"><span class="mono">16:9 · 4K</span><span class="mono">Link to YouTube</span></div></div>
+        <div class="bigplay"></div>
+      </div>
+      <div>
+        <p class="mono">Reel 05 · Showreel</p>
+        <h2 style="font-size:clamp(2rem,4.4vw,3.2rem)" id="reel-h">One minute, <em style="color:var(--accent);font-weight:400">every story</em></h2>
+        <p style="color:var(--muted)">Weddings, rides, celebrations and kitchens — cut together so you can feel the style before you book.</p>
+        <a class="btn ghost" href="https://www.youtube.com/" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+        <div class="specs">
+          <div><strong>4K</strong><span class="mono">Capture</span></div>
+          <div><strong>24 / 60</strong><span class="mono">Frame rates</span></div>
+          <div><strong>4 genres</strong><span class="mono">Wedding · Event · Ride · Food</span></div>
+          <div><strong>Reels-ready</strong><span class="mono">9:16 + 16:9 delivery</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="proc-h">
+    <div class="head"><div><p class="mono">Reel 06 · How we work</p><h2 id="proc-h">From brief to <em>final cut</em></h2></div></div>
+    <div class="steps">
+      <div class="step"><span class="mono">Step 1</span><h3>Brief</h3><p>A quick call to plan the date, location, mood and must-have shots.</p></div>
+      <div class="step"><span class="mono">Step 2</span><h3>Shoot</h3><p>Calm, unobtrusive coverage — you enjoy the day, I catch it.</p></div>
+      <div class="step"><span class="mono">Step 3</span><h3>Edit</h3><p>Colour grading, music, and story cut in my own cinematic style.</p></div>
+      <div class="step"><span class="mono">Step 4</span><h3>Deliver</h3><p>Online gallery, highlight film and social-ready reels.</p></div>
+    </div>
+  </section>
+
+  <section id="about" aria-labelledby="about-h">
+    <div class="about">
+      <div class="portrait"><img src="img/croquembouche.webp" alt="Helena Khan in a chef's jacket presenting a croquembouche tower" loading="lazy"></div>
+      <div>
+        <p class="mono" id="about-h">Reel 07 · About</p>
+        <blockquote>“I don’t just take pictures. I keep the feeling of the day.”</blockquote>
+        <p>Hi, I’m Helena Khan, a passionate photographer and cinematographer based in Dhaka. Over the years I’ve blended my love for storytelling with professional visual arts.</p>
+        <p>My camera journey started with the biker community, chasing rides and rolling shots, and grew into weddings, birthdays and full brand work for top restaurants. Whether it’s the raw emotion of a wedding, the adrenaline of a group ride, or the entire digital identity and viral videos of a restaurant, I bring the same cinematic vision to every frame.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" aria-labelledby="ct-h">
+    <div class="contact">
+      <div class="info">
+        <p class="mono">Reel 08 · Contact</p>
+        <h2 id="ct-h" style="font-size:clamp(2.2rem,5vw,3.6rem)">Let’s make <em style="color:var(--accent);font-weight:400">something</em></h2>
+        <div class="row"><span class="mono">Phone / WhatsApp</span><a class="val" href="https://wa.me/8801309002664" target="_blank" rel="noopener">+880 1309-002664</a><button class="copy" data-copy="+8801309002664">Copy</button></div>
+        <div class="row"><span class="mono">Email</span><span class="val">framemotionbyhelen@gmail.com</span><button class="copy" data-copy="framemotionbyhelen@gmail.com">Copy</button></div>
+        <div class="row"><span class="mono">Based in</span><span class="val">Dhaka, Bangladesh · travels anywhere</span></div>
+        <div class="row"><span class="mono">Facebook</span><span class="val"><a href="https://www.facebook.com/helenkhan.annie.7" target="_blank" rel="noopener">helenkhan.annie.7</a> · <a href="https://www.facebook.com/your.helenkhan" target="_blank" rel="noopener">your.helenkhan</a></span></div>
+        <div class="row"><span class="mono">Instagram</span><span class="val"><a href="https://www.instagram.com/helen_khan_biker/" target="_blank" rel="noopener">@helen_khan_biker</a></span></div>
+      </div>
+      <form id="f" novalidate>
+        <label>Name<input id="f-name" required placeholder="Your name"></label>
+        <label>Phone<input id="f-phone" placeholder="01XXXXXXXXX"></label>
+        <label>Shoot type<select id="f-type"><option>Premium package (৳25,000)</option><option>Regular package (৳20,000)</option><option>Light package (৳15,000)</option><option>Wedding</option><option>Birthday / Event</option><option>Biker ride</option><option>Restaurant content</option></select></label>
+        <label>Date<input id="f-date" type="date"></label>
+        <label class="full">Tell me about it<textarea id="f-msg" placeholder="Venue, guest count, style you like…"></textarea></label>
+        <button class="btn full" type="submit">Prepare booking message</button>
+        <div class="out" id="out" hidden></div>
+      </form>
+    </div>
+  </section>
+
+  <footer><span class="mono">© 2026 Helena Khan</span><span class="mono">Cinematographer · framemotionbyhelen@gmail.com · +880 1309-002664</span></footer>
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Project preview">
+  <div class="box"><div class="img" id="lb-img"></div>
+    <div class="bar"><div><p class="mono" id="lb-meta"></p><h3 id="lb-title"></h3></div><button class="btn ghost" id="lb-close">Close</button></div>
+  </div>
+</div>
+
+<script>
+const looks={
+  wedding:["#7a2e3a","#d79a6a","#2a1013"],
+  birthday:["#c2547a","#f0c35a","#3a1530"],
+  biker:["#1f3440","#c86b2a","#0b1014"],
+  food:["#5a2a12","#e0a04a","#1a0d06"]
+};
+const items=[
+  {c:"wedding",t:"Holud in Gold",m:"Wedding · Gulshan",v:1,w:1},
+  {c:"biker",t:"Dawn Ride to Sylhet",m:"Biker ride · 240 km",v:1},
+  {c:"food",t:"Brownie Board",m:"Restaurant · Dessert shoot",v:0,img:"img/brownies.webp"},
+  {c:"birthday",t:"Aria Turns Five",m:"Birthday · Dhanmondi",v:0},
+  {c:"wedding",t:"Reception Nights",m:"Wedding · Highlight film",v:1},
+  {c:"food",t:"Chocolate Ganache Cake",m:"Restaurant · FB page",v:0,w:1,img:"img/cake.webp"},
+  {c:"biker",t:"Girls Who Ride",m:"Community event",v:0},
+  {c:"birthday",t:"Fifty & Fabulous",m:"Milestone birthday",v:1},
+  {c:"wedding",t:"Bou er Saaj",m:"Bridal portraits",v:0},
+  {c:"food",t:"Croquembouche Tower",m:"Restaurant · Pastry",v:0,img:"img/croquembouche.webp"}
+];
+const bg=(c,i)=>{const [a,b,d]=looks[c];const x=20+(i*37)%60,y=25+(i*23)%50;
+  return `radial-gradient(70% 60% at ${x}% ${y}%,${b}cc,transparent 60%),radial-gradient(90% 80% at ${100-x}% 80%,${a},transparent 70%),${d}`;};
+const grid=document.getElementById("grid");
+items.forEach((it,i)=>{
+  const b=document.createElement("button");
+  b.className="frame"+(it.w?" wide":"");b.dataset.c=it.c;
+  b.innerHTML=(it.img?`<img class="img" src="${it.img}" alt="${it.t}" loading="lazy">`:`<div class="img" style="background:${bg(it.c,i)}"></div>`)+`<span class="tag">${it.v?"Film":"Photo"} · F${String(i+1).padStart(3,"0")}</span>${it.v?'<span class="play"></span>':""}<div class="cap"><div><p class="mono" style="margin:0">${it.m}</p><h3>${it.t}</h3></div></div>`;
+  b.addEventListener("click",()=>openLb(it,i));
+  grid.appendChild(b);
+});
+document.querySelectorAll(".chip").forEach(ch=>ch.addEventListener("click",()=>{
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c===ch));
+  const f=ch.dataset.f;
+  grid.querySelectorAll(".frame").forEach(fr=>fr.hidden=!(f==="all"||fr.dataset.c===f));
+}));
+const lb=document.getElementById("lb");
+function openLb(it,i){document.getElementById("lb-img").style.background=it.img?`#000 url(${it.img}) center/contain no-repeat`:bg(it.c,i);
+  document.getElementById("lb-meta").textContent=it.m;document.getElementById("lb-title").textContent=it.t;
+  lb.hidden=false;document.getElementById("lb-close").focus();}
+document.getElementById("lb-close").onclick=()=>lb.hidden=true;
+lb.addEventListener("click",e=>{if(e.target===lb)lb.hidden=true});
+addEventListener("keydown",e=>{if(e.key==="Escape")lb.hidden=true});
+
+/* timecode */
+const tc=document.getElementById("tc");let fr=0;
+setInterval(()=>{fr++;const f=fr%24,s=Math.floor(fr/24)%60,m=Math.floor(fr/1440)%60,h=Math.floor(fr/86400);
+  tc.textContent=[h,m,s,f].map(n=>String(n).padStart(2,"0")).join(":");},1000/24);
+
+/* film grain + light leak */
+const cv=document.getElementById("grain"),cx=cv.getContext("2d");
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function size(){cv.width=Math.min(cv.clientWidth,900);cv.height=Math.round(cv.width/2.39);}
+size();addEventListener("resize",size);
+let t=0;
+function draw(){t+=.006;const w=cv.width,h=cv.height;cx.clearRect(0,0,w,h);
+  const gx=w*(.6+.25*Math.sin(t)),g=cx.createRadialGradient(gx,h*.45,0,gx,h*.45,w*.5);
+  g.addColorStop(0,"rgba(232,162,74,.35)");g.addColorStop(1,"rgba(232,162,74,0)");cx.fillStyle=g;cx.fillRect(0,0,w,h);
+  /* horizon silhouette: a rider on the road */
+  cx.fillStyle="rgba(10,7,5,.85)";cx.fillRect(0,h*.78,w,h*.22);
+  const rx=((t*60)%(w+120))-60;cx.beginPath();cx.arc(rx,h*.76,h*.045,0,7);cx.arc(rx+h*.16,h*.76,h*.045,0,7);cx.fill();
+  cx.fillRect(rx,h*.66,h*.16,h*.07);cx.beginPath();cx.arc(rx+h*.09,h*.6,h*.03,0,7);cx.fill();
+  const id=cx.getImageData(0,0,w,h),d=id.data;
+  for(let i=0;i<d.length;i+=16){const n=(Math.random()*28)|0;d[i]+=n;d[i+1]+=n;d[i+2]+=n;}
+  cx.putImageData(id,0,0);
+  if(!reduce)requestAnimationFrame(draw);}
+draw();
+
+/* copy */
+document.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
+  const v=b.dataset.copy;
+  navigator.clipboard?.writeText(v).then(()=>{b.textContent="Copied"},()=>{b.textContent="Select text"}).catch(()=>{});
+  setTimeout(()=>b.textContent="Copy",1600);}));
+
+/* form */
+document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();
+  const g=id=>document.getElementById(id).value.trim();const out=document.getElementById("out");
+  if(!g("f-name")){out.hidden=false;out.textContent="Please add your name so Helena knows who to reply to.";return;}
+  out.hidden=false;
+  out.textContent=`Hi Helena, I'm ${g("f-name")}${g("f-phone")?" ("+g("f-phone")+")":""}.\nI'd like to book: ${g("f-type")}${g("f-date")?" on "+g("f-date"):""}.\n${g("f-msg")}\n\n→ Copy this and send it to WhatsApp +880 1309-002664 or framemotionbyhelen@gmail.com`;
+});
+</script>
+
+</body>
+</html>
